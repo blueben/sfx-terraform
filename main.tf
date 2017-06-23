@@ -11,11 +11,11 @@ provider "aws" {
 
 module "vpc" {
 	source = "./vpc"
-	vpc_name = "${var.vpc_name}"
+	vpc_id= "${var.vpc_id}"
 	region = "${var.region}"
-	domain_name = "${var.domain_name}"
-	vpc_cidr = "${var.vpc_cidr}"
-	vpc_pubnets = "${var.vpc_pubnets}"
-	vpc_privnets = "${var.vpc_privnets}"
-	vpc_subnet_size = "${var.vpc_subnet_size}"
+	domain = "${var.domain}"
+	cidr = "${var.vpc_cidr}"
+	pubnets = "${var.vpc_pubnets}"
+	privnets = "${var.vpc_privnets}"
+	subnet_size = "${var.vpc_subnet_size}"
 }
