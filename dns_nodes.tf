@@ -4,13 +4,12 @@ Terraform config for Seattlefenix
 
 // Provision DNS servers
 /*
-
 resource "aws_instance" "dns" {
 	count = "${var.ns_nodes}"
-	ami = "${lookup(var.ami_centos7, var.region)}"
+	ami = "${lookup(var.ami_centos, var.region)}"
 	instance_type = "t2.nano"
 
-	subnet_id = "${element(split(",", module.vpc.pubnet_ids), count.index % length(split(",", module.vpc.pubnet_ids)))}"
+	subnet_id = "${element(split(",", module.vpc.pubnet_ids), count.index)}"
 	vpc_security_group_ids = ["${module.vpc.sg_default_id}","${module.vpc.sg_dns_id}"]
 
 	tags {
@@ -34,5 +33,4 @@ resource "aws_ebs_volume" "dns_ebs" {
       Name = "Root Volume (dns)"
   }
 }
-
 */
