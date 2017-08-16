@@ -2,17 +2,90 @@
 Terraform Variables
 */
 
-variable "domain" { default = "seattlefenix.net" }
+//
+// Client environment
+// Some options are different between operating systems
+// If you are running Windows, set this to "windows"
 
-variable "ns_nodes"   { default = 0 }
-variable "mx_nodes"   { default = 1 }
-variable "www_nodes"  { default = 0 }
+variable "client_os"    { default = "unix" }
 
-variable "vpc_count"            { default = "1" }
-variable "vpc_network"          { default = "10.0.0.0/8" }
-variable "vpc_prefix_extent"    { default = "8"}
-variable "vpc_public_subnets"   { default = "3" }
-variable "vpc_private_subnets"  { default = "3" }
+//
+// Site configuration
+
+variable "site"         { default = "sfx" }
+variable "site_formal"  { default = "Seattlefenix"}
+variable "domain"       { default = "seattlefenix.net" }
+
+//
+// AWS configuration
+
+variable "profile"      { default = "seattlefenix" }
+
+//
+// Site Infrastructure configuration
+
+variable "infrastructure" {
+  default = {
+    region              = "us-west-2"
+    create_storage      = true
+    enable_storage_log  = true
+    use_tf_dynamo_lock  = true
+    use_tf_remote_state = true
+  }
+}
+
+//
+// VPCs
+
+variable "vpc" { default = ["sfx-services"] }
+
+variable "sfx-services" {
+  default = {
+    region          = "us-west-2"
+    network         = "172.16.192.0/20"
+    prefix_extent   = 6
+    public_subnets  = 3
+    private_subnets = 3
+  }
+}
+
+//
+// Services
+
+variable "service" { default = ["dns", "mx", "www"] }
+
+variable "dns" {
+  default = {
+    cluster_size  = 0
+    az_stripe     = true
+    instance_type = "t2.micro"
+    ami_name      = ""
+    ami_owner     = ""
+    use_elb       = false
+  }
+}
+
+variable "mx" {
+  default = {
+    cluster_size  = 1
+    az_stripe     = true
+    instance_type = "t2.micro"
+    ami_name      = ""
+    ami_owner     = ""
+    use_elb       = false
+  }
+}
+
+variable "www" {
+  default = {
+    cluster_size  = 0
+    az_stripe     = true
+    instance_type = "t2.micro"
+    ami_name      = ""
+    ami_owner     = ""
+    use_elb       = false
+  }
+}
 
 variable "ssh" {
   default = {
