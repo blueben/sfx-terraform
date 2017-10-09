@@ -110,3 +110,77 @@ resource "aws_s3_bucket_object" "terraform-state-files" {
     "x:service_type" = "infrastructure"
   }
 }
+
+// Set up the Instance Role
+
+data "aws_iam_policy_document" "instance_assume_role" {
+  statement {
+    actions       = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "instance_role" {
+  name = "instance-role"
+  path = "/"
+  assume_role_policy = "${data.aws_iam_policy_document.instance_assume_role.json}"
+  force_detach_policies = true
+}
+
+resource "aws_iam_instance_profile" "instance_role" {
+  name = "instance-role"
+  role = "${aws_iam_role.instance_role.name}"
+}
+
+// Configure what access instances get
+
+data "aws_iam_policy_document" "instance_access" {
+  statement {
+    sid       = ""
+    actions   = [
+      "ec2:DescribeInstances",
+      "ec2:CreateTags",
+      "ec2:DescribeTags",
+    ]
+    resources = ["*"]
+  }
+    statement {
+    sid       = ""
+    actions   = [
+      "ec2:DescribeVpcs",
+      "ec2:DescribeSecurityGroups",
+      "ec2:AuthorizeSecurityGroupEgress",
+      "ec2:AuthorizeSecurityGroupIngress",
+      "ec2:RevokeSecurityGroupEgress",
+      "ec2:RevokeSecurityGroupIngress",
+      ]
+    resources = ["*"]
+  } 
+  statement {
+    sid       = ""
+    actions   = ["autoscaling:*"]
+    resources = ["*"]
+  }
+  statement {
+    sid       = ""
+    actions   = ["s3:*"]
+    resources = [
+        "arn:aws:s3:::backups",
+        "arn:aws:s3:::backups/*"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "instance_access" {
+  name   = "instance-access"
+  path   = "/"
+  policy = "${data.aws_iam_policy_document.instance_access.json}"
+}
+
+resource "aws_iam_role_policy_attachment" "attach" {
+    role       = "${aws_iam_role.instance_role.name}"
+    policy_arn = "${aws_iam_policy.instance_access.arn}"
+}

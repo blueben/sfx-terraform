@@ -52,13 +52,13 @@ variable "sfx-services" {
 //
 // Services
 
-variable "service" { default = ["dns", "mx", "www"] }
+variable "service" { default = ["consul", "mx", "www"] }
 
-variable "dns" {
+variable "consul" {
   default = {
     cluster_size  = 0
     az_stripe     = true
-    instance_type = "t2.micro"
+    instance_type = "t2.nano"
     ami_name      = ""
     ami_owner     = ""
     use_elb       = false
