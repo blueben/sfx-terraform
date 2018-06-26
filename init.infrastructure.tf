@@ -7,7 +7,7 @@ Copyright 2017 Benjamin Krueger
 */
 
 provider "aws" {
-  version = "~> 0.1"
+  version = "~> 1.8"
 
   profile = "${var.profile}"
   region  = "${var.infrastructure["region"]}"
@@ -29,8 +29,8 @@ resource "aws_s3_bucket" "site-infrastructure-log" {
 
   tags {
     "Description"    = "Infrastructure Storage Access Logs"
-    "x:managedby"    = "Terraform"
-    "x:service_type" = "infrastructure"
+    "x:managed:by"    = "Terraform"
+    "x:service:type" = "infrastructure"
   }
 }
 
@@ -52,8 +52,8 @@ resource "aws_s3_bucket" "site-infrastructure" {
 
   tags {
     "Name"           = "Infrastructure Storage"
-    "x:managedby"    = "Terraform"
-    "x:service_type" = "infrastructure"
+    "x:managed:by"    = "Terraform"
+    "x:service:type" = "infrastructure"
   }
 }
 
@@ -83,8 +83,8 @@ resource "aws_dynamodb_table" "site-infrastructure-tf-locks" {
 
   tags {
     "Description"    = "Terraform State Locks"
-    "x:managedby"    = "Terraform"
-    "x:service_type" = "infrastructure"
+    "x:managed:by"    = "Terraform"
+    "x:service:type" = "infrastructure"
   }
 }
 
@@ -106,8 +106,8 @@ resource "aws_s3_bucket_object" "terraform-state-files" {
 
   tags {
     "Description"    = "Terraform State Files"
-    "x:managedby"    = "Terraform"
-    "x:service_type" = "infrastructure"
+    "x:managed:by"    = "Terraform"
+    "x:service:type" = "infrastructure"
   }
 }
 
